@@ -4,7 +4,10 @@ using System.Text;
 
 namespace KitsuQuestions.Domain.Enums
 {
-    internal class GoalStatus
+    public enum GoalStatus
     {
+        ToLearn = 0,
+        Learning = 1,
+        Fulfilled = 2
     }
 }
