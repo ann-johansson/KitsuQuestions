@@ -14,11 +14,11 @@ namespace KitsuQuestions.Domain.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime? FulfilledAt { get; set; }
 
-        // --- "many" side: a goal optionally belongs to ONE category ---
+        // "many" side: a goal belongs to zero or one category
         public int? CategoryId { get; set; }     // int? = optional relationship
         public Category? Category { get; set; }  // reference nav
 
-        // --- "one" side: a goal owns MANY of these ---
+        // "one" side: a goal owns MANY of these
         public ICollection<Resource> Resources { get; set; } = new List<Resource>();
         public ICollection<QuizAttempt> QuizAttempts { get; set; } = new List<QuizAttempt>();
     }
