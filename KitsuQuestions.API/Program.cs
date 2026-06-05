@@ -39,7 +39,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("BlazorClient", policy =>
-        policy.WithOrigins("https://localhost:7000", "http://localhost:5000")
+        policy.WithOrigins("https://localhost:7118")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
