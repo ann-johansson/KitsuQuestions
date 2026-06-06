@@ -1,0 +1,47 @@
+﻿@page "/categories"
+@inject HttpClient Http
+
+<PageTitle>Kitsu Questions — Categories</PageTitle>
+
+<h1>Categories</h1>
+
+@if (errorMessage is not null)
+{
+    <p style="color: crimson;">@errorMessage</p>
+}
+
+@if (categories is null)
+{
+    <p><em>Loading…</em></p>
+}
+else if (categories.Count == 0)
+{
+    <p>No categories yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var c in categories)
+        {
+            <li>@c.Name</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<CategoryDto>? categories;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            categories = await Http.GetFromJsonAsync<List<CategoryDto>>("api/Categories");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Couldn't reach the API: {ex.Message}";
+            categories = new List<CategoryDto>();
+        }
+    }
+}

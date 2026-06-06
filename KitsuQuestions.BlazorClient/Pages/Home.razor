@@ -1,0 +1,157 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<PageTitle>Kitsu Questions — Goals</PageTitle>
+
+<h1>Your goals</h1>
+
+@if (errorMessage is not null)
+{
+    <p style="color: crimson;">@errorMessage</p>
+}
+
+<section style="margin-bottom: 1.5rem;">
+    <h2>Add a goal</h2>
+    <input @bind="newTitle" placeholder="Title" />
+    <input @bind="newDescription" placeholder="Description (optional)" />
+    <button @onclick="CreateGoal" disabled="@isBusy">Add</button>
+</section>
+
+@if (goals is null)
+{
+    <p><em>Loading…</em></p>
+}
+else if (goals.Count == 0)
+{
+    <p>No goals yet. Add one above.</p>
+}
+else
+{
+    <ul>
+        @foreach (var goal in goals)
+        {
+            <li style="margin-bottom: 1rem;">
+                <strong>@goal.Title</strong> — @goal.Status
+                @if (!string.IsNullOrWhiteSpace(goal.Description))
+                {
+                    <div><small>@goal.Description</small></div>
+                }
+
+                <div style="margin-top: 0.4rem;">
+                    @if (goal.Status == GoalStatus.ToLearn)
+                    {
+                        <button @onclick='() => ChangeStatus(goal.Id,"move-to-learning")'>
+                            Start learning
+                        </button>
+
+                    }
+                    @if (goal.Status == GoalStatus.Learning)
+                    {
+                        <button @onclick='() => ChangeStatus(goal.Id,"fulfill")'>
+                            Mark fulfilled
+                        </button>
+                        <button @onclick='() => ChangeStatus(goal.Id,"move-to-tolearn")'>
+                            Back to to-learn
+                        </button>
+                    }
+                    <button @onclick='() => DeleteGoal(goal.Id)'>Delete</button>
+                </div>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<GoalDto>? goals;
+    private string newTitle = "";
+    private string newDescription = "";
+    private string? errorMessage;
+    private bool isBusy;
+
+    protected override async Task OnInitializedAsync() => await LoadGoals();
+
+    private async Task LoadGoals()
+    {
+        try
+        {
+            errorMessage = null;
+            goals = await Http.GetFromJsonAsync<List<GoalDto>>("api/Goals");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Couldn't reach the API: {ex.Message}";
+            goals = new List<GoalDto>();
+        }
+    }
+
+    private async Task CreateGoal()
+    {
+        if (string.IsNullOrWhiteSpace(newTitle)) return;
+
+        isBusy = true;
+        try
+        {
+            var dto = new CreateGoalDto
+            {
+                Title = newTitle.Trim(),
+                Description = string.IsNullOrWhiteSpace(newDescription) ? null : newDescription.Trim()
+            };
+            var response = await Http.PostAsJsonAsync("api/Goals", dto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                newTitle = "";
+                newDescription = "";
+                await LoadGoals();
+            }
+            else
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Create failed ({(int)response.StatusCode}): {body}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Create failed: {ex.Message}";
+        }
+        finally
+        {
+            isBusy = false;
+        }
+    }
+
+    private async Task ChangeStatus(int id, string action)
+    {
+        try
+        {
+            var response = await Http.PostAsync($"api/Goals/{id}/{action}", null);
+            if (response.IsSuccessStatusCode)
+                await LoadGoals();
+            else
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Status change failed ({(int)response.StatusCode}): {body}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Status change failed: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteGoal(int id)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"api/Goals/{id}");
+            if (response.IsSuccessStatusCode)
+                await LoadGoals();
+            else
+                errorMessage = $"Delete failed: {(int)response.StatusCode}";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Delete failed: {ex.Message}";
+        }
+    }
+}
