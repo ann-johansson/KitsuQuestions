@@ -1,8 +1,6 @@
 <Solution>
   <Project Path="../KitsuQuestions.Application/KitsuQuestions.Application.csproj" />
-  <Project Path="../KitsuQuestions.BlazorClient/KitsuQuestions.BlazorClient.csproj">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
+  <Project Path="../KitsuQuestions.BlazorClient/KitsuQuestions.BlazorClient.csproj" />
   <Project Path="../KitsuQuestions.Domain/KitsuQuestions.Domain.csproj" />
   <Project Path="../KitsuQuestions.Infrastructure/KitsuQuestions.Infrastructure.csproj" />
   <Project Path="../KitsuQuestions.Tests/KitsuQuestions.Tests.csproj" />

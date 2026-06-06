@@ -1,0 +1,7 @@
+﻿.shrine-page {
+    background-image: url('/images/shrine-room.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
