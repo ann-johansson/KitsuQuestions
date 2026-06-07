@@ -1,3 +1,92 @@
+:root {
+    /* Core neutrals — the warm shrine palette */
+    --parchment: #f4e4c1; /* panels, paper surfaces */
+    --sand: #e3cfa3; /* slightly deeper surfaces, hover states */
+    --bark: #6b4423; /* borders, structural lines */
+    --ink: #2a1f15; /* main text — warm dark brown, not pure black */
+    /* Accents — foxfire & nature */
+    --foxfire: #f5b942; /* amber glow, highlights */
+    --rust: #b85428; /* primary action buttons (fox-tail orange) */
+    --moss: #6b8e4e; /* success, "fulfilled" */
+    --crimson: #a83232; /* errors, destructive actions */
+}
+
+body {
+    background-color: var(--ink);
+    margin: 0; /* belt-and-suspenders — kill any default body margin */
+}
+
+.parchment-panel {
+    background-color: rgba(244, 228, 193, 0.92); /* parchment, slightly translucent */
+    border: 1px solid var(--bark);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(42, 31, 21, 0.15); /* soft ink-tinted shadow */
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+}
+
+/* Shared button base — anything with one of these classes inherits this */
+.btn-foxfire,
+.btn-sand,
+.btn-crimson {
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--bark);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Primary — the strong, inviting action */
+.btn-foxfire {
+    background-color: var(--rust);
+    color: var(--parchment);
+}
+
+    .btn-foxfire:hover {
+        background-color: var(--foxfire);
+        color: var(--ink);
+    }
+
+/* Secondary — quieter neutral action */
+.btn-sand {
+    background-color: var(--sand);
+    color: var(--ink);
+}
+
+    .btn-sand:hover {
+        background-color: var(--parchment);
+    }
+
+/* Destructive — outlined in crimson; fills only on hover */
+.btn-crimson {
+    background-color: transparent;
+    color: var(--crimson);
+    border-color: var(--crimson);
+}
+
+    .btn-crimson:hover {
+        background-color: var(--crimson);
+        color: var(--parchment);
+    }
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0; /* top:0 right:0 bottom:0 left:0 */
+    background-color: rgba(42, 31, 21, 0.55); /* ink at 55% — dims the room */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-panel {
+    max-width: 420px;
+    width: 90%;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -18,10 +107,6 @@ a, .btn-link {
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-.content {
-    padding-top: 1.1rem;
 }
 
 .valid.modified:not([type=checkbox]) {

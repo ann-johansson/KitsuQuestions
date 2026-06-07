@@ -3,62 +3,110 @@
 
 <PageTitle>Kitsu Questions — Goals</PageTitle>
 
-<h1>Your goals</h1>
+<div class="shrine-page">
+
+<img src="images/kitsu-greeting.png"
+     alt="Kitsu the kitsune"
+     class="kitsu-mascot" />
 
 @if (errorMessage is not null)
 {
     <p style="color: crimson;">@errorMessage</p>
 }
 
-<section style="margin-bottom: 1.5rem;">
-    <h2>Add a goal</h2>
-    <input @bind="newTitle" placeholder="Title" />
-    <input @bind="newDescription" placeholder="Description (optional)" />
-    <button @onclick="CreateGoal" disabled="@isBusy">Add</button>
-</section>
+@if (!showAddForm)
+{
+    <button class="btn-foxfire" @onclick="() => showAddForm = true">
+        + Add a goal
+    </button>
+}
 
-@if (goals is null)
-{
-    <p><em>Loading…</em></p>
-}
-else if (goals.Count == 0)
-{
-    <p>No goals yet. Add one above.</p>
-}
-else
-{
-    <ul>
-        @foreach (var goal in goals)
+<div class="home-columns">
+    @if (showAddForm)
+    {
+        <div class="parchment-panel add-goal-panel">
+            <button class="panel-close"
+                    @onclick="() => showAddForm = false"
+                    aria-label="Close">
+                ×
+            </button>
+
+            <section>
+                <h2>Add a goal</h2>
+                <input @bind="newTitle" placeholder="Title" />
+                <input @bind="newDescription" placeholder="Description (optional)" />
+                <button class="btn-foxfire" @onclick="CreateGoal" disabled="@isBusy">Add</button>
+            </section>
+        </div>
+    }
+
+    <div class="parchment-panel">
+        @if (goals is null)
         {
-            <li style="margin-bottom: 1rem;">
-                <strong>@goal.Title</strong> — @goal.Status
-                @if (!string.IsNullOrWhiteSpace(goal.Description))
-                {
-                    <div><small>@goal.Description</small></div>
-                }
-
-                <div style="margin-top: 0.4rem;">
-                    @if (goal.Status == GoalStatus.ToLearn)
-                    {
-                        <button @onclick='() => ChangeStatus(goal.Id,"move-to-learning")'>
-                            Start learning
-                        </button>
-
-                    }
-                    @if (goal.Status == GoalStatus.Learning)
-                    {
-                        <button @onclick='() => ChangeStatus(goal.Id,"fulfill")'>
-                            Mark fulfilled
-                        </button>
-                        <button @onclick='() => ChangeStatus(goal.Id,"move-to-tolearn")'>
-                            Back to to-learn
-                        </button>
-                    }
-                    <button @onclick='() => DeleteGoal(goal.Id)'>Delete</button>
-                </div>
-            </li>
+            <p><em>Loading…</em></p>
         }
-    </ul>
+        else if (goals.Count == 0)
+        {
+            <p>No goals yet. Add one above.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var goal in goals)
+                {
+                    <li style="margin-bottom: 1rem;">
+                        <strong>@goal.Title</strong> — @goal.Status
+                        @if (!string.IsNullOrWhiteSpace(goal.Description))
+                        {
+                            <div><small>@goal.Description</small></div>
+                        }
+
+                            <div style="margin-top: 0.4rem; display: flex; gap: 0.4rem;">
+                                @if (goal.Status == GoalStatus.ToLearn)
+                                {
+                                    <button class="btn-foxfire"
+                                            @onclick='() => ChangeStatus(goal.Id, "move-to-learning")'>
+                                        Start learning
+                                    </button>
+                                }
+                                @if (goal.Status == GoalStatus.Learning)
+                                {
+                                    <button class="btn-foxfire"
+                                            @onclick='() => ChangeStatus(goal.Id, "fulfill")'>
+                                        Mark fulfilled
+                                    </button>
+                                    <button class="btn-sand"
+                                            @onclick='() => ChangeStatus(goal.Id, "move-to-tolearn")'>
+                                        Back to to-learn
+                                    </button>
+                                }
+                                <button class="btn-crimson" @onclick='() => goalIdPendingDelete = goal.Id'>Delete</button>
+                            </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+</div>
+
+@if (goalIdPendingDelete is not null)
+{
+    <div class="modal-backdrop" @onclick="() => goalIdPendingDelete = null">
+        <div class="modal-panel parchment-panel" @onclick:stopPropagation="true">
+            <h2>Really delete this goal?</h2>
+            <p>This cannot be undone.</p>
+            <div style="display: flex; gap: 0.6rem; justify-content: flex-end;">
+                <button class="btn-sand" @onclick="() => goalIdPendingDelete = null">
+                    Cancel
+                </button>
+                <button class="btn-crimson" @onclick="ConfirmDelete">
+                    Yes, delete
+                </button>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -67,6 +115,8 @@ else
     private string newDescription = "";
     private string? errorMessage;
     private bool isBusy;
+    private bool showAddForm = false;
+    private int? goalIdPendingDelete = null;
 
     protected override async Task OnInitializedAsync() => await LoadGoals();
 
@@ -153,5 +203,14 @@ else
         {
             errorMessage = $"Delete failed: {ex.Message}";
         }
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (goalIdPendingDelete is null) return;
+
+        var id = goalIdPendingDelete.Value;
+        goalIdPendingDelete = null;   // close modal immediately
+        await DeleteGoal(id);          // then do the actual work
     }
 }

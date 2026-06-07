@@ -1,0 +1,63 @@
+﻿.shrine-page {
+    background-image: url('/images/shrine-room.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative; /* NEW: anchor for the absolute mascot */
+}
+
+.kitsu-mascot {
+    position: absolute;
+    bottom: 0;
+    right: 6%;
+    height: 80vh; /* scales with viewport */
+    max-height: 800px; /* sane ceiling on huge screens */
+    pointer-events: none; /* clicks pass through her */
+    z-index: 1;
+}
+
+.home-columns {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start; /* so the shorter panel doesn't stretch */
+    position: relative; /* sits above the mascot */
+    z-index: 2;
+}
+
+    .home-columns > .parchment-panel {
+        flex: 1;
+        max-width: 480px; /* never wider than this, even alone */
+        margin-bottom: 0;
+    }
+
+/* Stack vertically on narrow screens */
+@media (max-width: 768px) {
+    .home-columns {
+        flex-direction: column;
+    }
+}
+
+.add-goal-panel {
+    position: relative; /* anchor for the corner close button */
+}
+
+.panel-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--bark);
+    cursor: pointer;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+    .panel-close:hover {
+        color: var(--crimson);
+        background-color: rgba(168, 50, 56, 0.1); /* crimson at 10% */
+    }
