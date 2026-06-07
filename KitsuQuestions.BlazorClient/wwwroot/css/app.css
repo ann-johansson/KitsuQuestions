@@ -11,6 +11,11 @@
     --crimson: #a83232; /* errors, destructive actions */
 }
 
+body {
+    background-color: var(--ink);
+    margin: 0; /* belt-and-suspenders — kill any default body margin */
+}
+
 .parchment-panel {
     background-color: rgba(244, 228, 193, 0.92); /* parchment, slightly translucent */
     border: 1px solid var(--bark);
@@ -66,6 +71,21 @@
         background-color: var(--crimson);
         color: var(--parchment);
     }
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0; /* top:0 right:0 bottom:0 left:0 */
+    background-color: rgba(42, 31, 21, 0.55); /* ink at 55% — dims the room */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-panel {
+    max-width: 420px;
+    width: 90%;
+}
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

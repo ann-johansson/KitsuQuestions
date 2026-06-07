@@ -7,7 +7,7 @@
 
 <h1>Your goals</h1>
 
-<img src="images/kitsu-mascot.png"
+<img src="images/kitsu-greeting.png"
      alt="Kitsu the kitsune"
      style="max-height: 400px;" />
 
@@ -82,7 +82,7 @@
                                         Back to to-learn
                                     </button>
                                 }
-                                <button class="btn-crimson" @onclick='() => DeleteGoal(goal.Id)'>Delete</button>
+                                <button class="btn-crimson" @onclick='() => goalIdPendingDelete = goal.Id'>Delete</button>
                             </div>
                     </li>
                 }
@@ -93,6 +93,24 @@
 
 </div>
 
+@if (goalIdPendingDelete is not null)
+{
+    <div class="modal-backdrop" @onclick="() => goalIdPendingDelete = null">
+        <div class="modal-panel parchment-panel" @onclick:stopPropagation="true">
+            <h2>Really delete this goal?</h2>
+            <p>This cannot be undone.</p>
+            <div style="display: flex; gap: 0.6rem; justify-content: flex-end;">
+                <button class="btn-sand" @onclick="() => goalIdPendingDelete = null">
+                    Cancel
+                </button>
+                <button class="btn-crimson" @onclick="ConfirmDelete">
+                    Yes, delete
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private List<GoalDto>? goals;
     private string newTitle = "";
@@ -100,6 +118,7 @@
     private string? errorMessage;
     private bool isBusy;
     private bool showAddForm = false;
+    private int? goalIdPendingDelete = null;
 
     protected override async Task OnInitializedAsync() => await LoadGoals();
 
@@ -186,5 +205,14 @@
         {
             errorMessage = $"Delete failed: {ex.Message}";
         }
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (goalIdPendingDelete is null) return;
+
+        var id = goalIdPendingDelete.Value;
+        goalIdPendingDelete = null;   // close modal immediately
+        await DeleteGoal(id);          // then do the actual work
     }
 }
