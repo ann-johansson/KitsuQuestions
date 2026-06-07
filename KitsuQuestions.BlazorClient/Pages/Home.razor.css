@@ -24,3 +24,27 @@
         flex-direction: column;
     }
 }
+
+.add-goal-panel {
+    position: relative; /* anchor for the corner close button */
+}
+
+.panel-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--bark);
+    cursor: pointer;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+    .panel-close:hover {
+        color: var(--crimson);
+        background-color: rgba(168, 50, 56, 0.1); /* crimson at 10% */
+    }

@@ -16,13 +16,23 @@
     <p style="color: crimson;">@errorMessage</p>
 }
 
-<button class="btn-foxfire" @onclick="() => showAddForm = !showAddForm">
-    @(showAddForm ? "Close" : "Add a goal")
-</button>
+@if (!showAddForm)
+{
+    <button class="btn-foxfire" @onclick="() => showAddForm = true">
+        + Add a goal
+    </button>
+}
+
 <div class="home-columns">
     @if (showAddForm)
     {
-        <div class="parchment-panel">
+        <div class="parchment-panel add-goal-panel">
+            <button class="panel-close"
+                    @onclick="() => showAddForm = false"
+                    aria-label="Close">
+                ×
+            </button>
+
             <section>
                 <h2>Add a goal</h2>
                 <input @bind="newTitle" placeholder="Title" />
