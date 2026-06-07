@@ -1,3 +1,72 @@
+:root {
+    /* Core neutrals — the warm shrine palette */
+    --parchment: #f4e4c1; /* panels, paper surfaces */
+    --sand: #e3cfa3; /* slightly deeper surfaces, hover states */
+    --bark: #6b4423; /* borders, structural lines */
+    --ink: #2a1f15; /* main text — warm dark brown, not pure black */
+    /* Accents — foxfire & nature */
+    --foxfire: #f5b942; /* amber glow, highlights */
+    --rust: #b85428; /* primary action buttons (fox-tail orange) */
+    --moss: #6b8e4e; /* success, "fulfilled" */
+    --crimson: #a83232; /* errors, destructive actions */
+}
+
+.parchment-panel {
+    background-color: rgba(244, 228, 193, 0.92); /* parchment, slightly translucent */
+    border: 1px solid var(--bark);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(42, 31, 21, 0.15); /* soft ink-tinted shadow */
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+}
+
+/* Shared button base — anything with one of these classes inherits this */
+.btn-foxfire,
+.btn-sand,
+.btn-crimson {
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--bark);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Primary — the strong, inviting action */
+.btn-foxfire {
+    background-color: var(--rust);
+    color: var(--parchment);
+}
+
+    .btn-foxfire:hover {
+        background-color: var(--foxfire);
+        color: var(--ink);
+    }
+
+/* Secondary — quieter neutral action */
+.btn-sand {
+    background-color: var(--sand);
+    color: var(--ink);
+}
+
+    .btn-sand:hover {
+        background-color: var(--parchment);
+    }
+
+/* Destructive — outlined in crimson; fills only on hover */
+.btn-crimson {
+    background-color: transparent;
+    color: var(--crimson);
+    border-color: var(--crimson);
+}
+
+    .btn-crimson:hover {
+        background-color: var(--crimson);
+        color: var(--parchment);
+    }
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

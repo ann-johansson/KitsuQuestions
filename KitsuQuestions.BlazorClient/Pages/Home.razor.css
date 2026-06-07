@@ -5,3 +5,22 @@
     min-height: 100vh;
     padding: 2rem;
 }
+
+.home-columns {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start; /* so the shorter panel doesn't stretch */
+}
+
+    .home-columns > .parchment-panel {
+        flex: 1;
+        max-width: 480px; /* never wider than this, even alone */
+        margin-bottom: 0;
+    }
+
+/* Stack vertically on narrow screens */
+@media (max-width: 768px) {
+    .home-columns {
+        flex-direction: column;
+    }
+}

@@ -56,7 +56,7 @@
     }
 
 .nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.37);
+    background-color: rgba(240, 184, 48, 0.15);  /* foxfire at 15% opacity */
     color: white;
 }
 
